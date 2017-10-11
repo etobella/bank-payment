@@ -20,7 +20,7 @@ class AccountPaymentMethod(models.Model):
         help="Activate this option if this payment method requires you to "
         "know the bank account number of your customer or supplier.")
     display_name = fields.Char(
-        compute='compute_display_name',
+        compute='_compute_display_name',
         store=True, string='Display Name')
     payment_mode_ids = fields.One2many(
         comodel_name='account.payment.mode', inverse_name='payment_method_id',
@@ -28,7 +28,7 @@ class AccountPaymentMethod(models.Model):
 
     @api.multi
     @api.depends('code', 'name', 'payment_type')
-    def compute_display_name(self):
+    def _compute_display_name(self):
         for method in self:
             method.display_name = u'[%s] %s (%s)' % (
                 method.code, method.name, method.payment_type)

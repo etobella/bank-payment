@@ -14,7 +14,7 @@ class TestAccountPaymentMode(TransactionCase):
         self.journal_model = self.env['account.journal']
         self.payment_mode_model = self.env['account.payment.mode']
 
-        #refs
+        # refs
         self.manual_out = self.env.ref(
             'account.account_payment_method_manual_out')
         # Company
@@ -57,10 +57,15 @@ class TestAccountPaymentMode(TransactionCase):
             self.payment_mode_c1.\
                 write({'fixed_journal_id': self.journal_c2.id})
         with self.assertRaises(ValidationError):
-            self.payment_mode_c1.\
-                write({'variable_journal_ids': [
-                (6, 0, [self.journal_c1.id, self.journal_c2.id,
-                        self.journal_c3.id])]})
+            self.payment_mode_c1.write({
+                'variable_journal_ids': [
+                    (6, 0, [
+                        self.journal_c1.id,
+                        self.journal_c2.id,
+                        self.journal_c3.id
+                    ])
+                ]
+            })
         with self.assertRaises(ValidationError):
             self.journal_c1.write({'company_id': self.company_2.id})
 
