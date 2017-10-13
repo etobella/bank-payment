@@ -33,14 +33,16 @@ class AccountPaymentMode(models.Model):
         "only has one bank account, you should always select 'Fixed'.")
     fixed_journal_id = fields.Many2one(
         'account.journal', string='Fixed Bank Journal',
-        domain=[('type', '=', 'bank')], ondelete='restrict')
+        domain="[('company_id', '=', company_id), ('type', '=', 'bank')]",
+        ondelete='restrict')
     # I need to use the old definition, because I have 2 M2M fields
     # pointing to account.journal
     variable_journal_ids = fields.Many2many(
         comodel_name='account.journal',
         relation='account_payment_mode_variable_journal_rel',
         column1='payment_mode_id', column2='journal_id',
-        string='Allowed Bank Journals')
+        string='Allowed Bank Journals',
+        domain="[('company_id', '=', company_id), ('type', '=', 'bank')]")
     payment_method_id = fields.Many2one(
         'account.payment.method', string='Payment Method', required=True,
         ondelete='restrict')  # equivalent v8 field : type
